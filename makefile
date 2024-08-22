@@ -15,5 +15,4 @@ docker-push:
 	docker push ghcr.io/dasiths/plugin-platform:latest
 
 start:
-	python scripts/start_plugins.py &
-	uvicorn api.main:app --host 0.0.0.0 --port 8000
+	python scripts/start_all.py

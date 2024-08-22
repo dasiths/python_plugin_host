@@ -1,5 +1,4 @@
 import requests
-from config import PLUGINS
 
 class PluginManager:
     def __init__(self, plugins):
@@ -14,3 +13,6 @@ class PluginManager:
             return response.json()
         else:
             raise Exception("Plugin not found")
+        
+    def get_all_plugins(self):
+        return self.plugins
