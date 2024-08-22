@@ -1,7 +1,10 @@
 import os
 import requests
 import tarfile
-from api.config import PLUGINS
+import yaml
+
+with open('config.yaml', 'r') as file:
+    PLUGINS = yaml.safe_load(file)['plugins']
 
 plugins_dir = 'plugins'
 
