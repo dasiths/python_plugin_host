@@ -1,14 +1,13 @@
-FROM python:3.10-slim
+FROM python:3.12-slim
+
+# install make
+RUN apt-get update && apt-get install -y make
 
 WORKDIR /app
 
 COPY . .
 
-# Install main API dependencies
+# install platform dependencies
 RUN make install-platform-dependencies
 
-# install plugin dependencies
-RUN make install-plugin-dependencies
-
-# Set the entry point to start plugins and the main API
-CMD ["start.sh"]
+CMD ["make", "start"]
