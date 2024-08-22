@@ -2,6 +2,7 @@ import os
 import requests
 import tarfile
 import yaml
+import shutil
 
 with open('config.yaml', 'r') as file:
     PLUGINS = yaml.safe_load(file)['plugins']
@@ -17,7 +18,10 @@ for plugin in PLUGINS:
     plugin_path = os.path.join(plugins_dir, plugin_name)    
     
     if not os.path.exists(plugin_path):
-        os.makedirs(plugin_path)
+        # copying the plugin sample to the path for now
+        source_folder = './sample-plugin-template'
+        shutil.copytree(source_folder, plugin_path)
+
         # response = requests.get(artifact_uri, stream=True)
         # tarball_path = f"{plugin_name}.tar.gz"
         
@@ -28,3 +32,5 @@ for plugin in PLUGINS:
         #     tar.extractall(plugin_path)
         
         # os.remove(tarball_path)
+    else:
+        raise Exception(f"Plugin {plugin_name} already exists")

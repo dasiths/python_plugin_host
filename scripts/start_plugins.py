@@ -15,8 +15,15 @@ for plugin in PLUGINS:
     venv_dir = os.path.join(plugin_path, 'venv')
     port = plugin['port']
 
-    # Start the plugin
-    process = subprocess.Popen([os.path.join(venv_dir, 'bin', 'python'), os.path.join(plugin_path, 'app.py'), str(port)])
+    # Set the PLUGIN_PORT environment variable
+    env = os.environ.copy()
+    env['PLUGIN_PORT'] = str(port)
+
+    # Start the plugin with the environment variable
+    process = subprocess.Popen(
+        [os.path.join(venv_dir, 'bin', 'python'), os.path.join(plugin_path, 'app.py')],
+        env=env
+    )
     processes.append(process)
 
 # Wait for all processes to complete
