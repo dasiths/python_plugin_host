@@ -13,6 +13,12 @@ plugins_dir = 'plugins'
 
 processes = []
 
+def start_api():
+    process = subprocess.Popen(
+        ['python', os.path.join(api_path, 'main.py')]
+    )
+    return process
+
 def start_plugin(plugin):
     plugin_name = f"{plugin['name']}_{plugin['version']}"
     plugin_path = os.path.join(plugins_dir, plugin_name)
@@ -60,6 +66,10 @@ if __name__ == '__main__':
     try:
         signal.signal(signal.SIGINT, handle_sigint)
 
+        api_process = start_api()
+        processes.append(api_process)
+        print("Started API")
+
         # start each plugin
         for plugin in PLUGINS:
             process = start_plugin(plugin)
@@ -72,6 +82,11 @@ if __name__ == '__main__':
                 if process.poll() is not None:
                     print(f"Process {process.pid} finished.")
                     processes.remove(process)
+
+                    if process == api_process:
+                        print("API process has finished.")
+                        terminate_processes(processes)
+                        break
             if not processes:
                 break
             time.sleep(1)

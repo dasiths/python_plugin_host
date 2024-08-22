@@ -8,15 +8,23 @@ plugin_manager = PluginManager(PLUGINS)
 @app.post("/api/plugin/{name}/{version}")
 async def run_plugin(name: str, version: str, input_data: dict):
     try:
-        response = plugin_manager.execute_plugin(name, version, input_data)
+        response = await plugin_manager.execute_plugin(name, version, input_data)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/api/plugins")
+async def get_plugins():
+    try:
+        response = await plugin_manager.get_all_plugins()
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/plugin/list")
-async def run_plugin(name: str, version: str, input_data: dict):
+@app.get("/api/health")
+async def get_plugins():
     try:
-        response = plugin_manager.execute_plugin(name, version, input_data)
+        response = await plugin_manager.get_health()
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

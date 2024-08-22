@@ -1,5 +1,4 @@
 import os
-import requests
 import tarfile
 import yaml
 import shutil
@@ -9,8 +8,15 @@ with open('config.yaml', 'r') as file:
 
 plugins_dir = 'plugins'
 
-if not os.path.exists(plugins_dir):
-    os.makedirs(plugins_dir)
+if not plugins_dir:
+    raise Exception("plugins_dir is not set")
+
+if os.path.exists(plugins_dir):
+    print(f"Cleaning up {plugins_dir}")
+    shutil.rmtree(plugins_dir)
+
+print(f"Creating {plugins_dir}")
+os.makedirs(plugins_dir)
 
 for plugin in PLUGINS:
     plugin_name = f"{plugin['name']}_{plugin['version']}"
@@ -19,6 +25,7 @@ for plugin in PLUGINS:
     
     if not os.path.exists(plugin_path):
         # copying the plugin sample to the path for now
+        print(f"Downloading plugin {plugin_name} from {artifact_uri}")
         source_folder = './sample-plugin-template'
         shutil.copytree(source_folder, plugin_path)
 
