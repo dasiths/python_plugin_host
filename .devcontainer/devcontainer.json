@@ -1,0 +1,33 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
+{
+    "name": "Plugin-host-devcontainer",
+    // Or use a Dockerfile or Docker Compose file.
+    // More info: https://containers.dev/guide/dockerfile
+    "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
+	"features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
+    "customizations": {
+        "vscode/extensions": [
+            "IBM.output-colorizer",
+            "oderwat.indent-rainbow",
+            "ms-python.python",
+            "ms-python.vscode-pylance"
+        ],
+        "settings": {
+            "files.insertFinalNewline": true,
+            "terminal.integrated.profiles.linux": {
+                "zsh": {
+                "path": "/usr/bin/zsh"
+                }
+            },
+            "terminal.integrated.defaultProfile.linux": "zsh",
+            "editor.guides.bracketPairs": true
+        }
+    },
+	"forwardPorts": [8000],
+	"mounts": [
+        "source=${env:HOME}${env:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind"
+    ]
+}

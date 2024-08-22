@@ -5,10 +5,10 @@ WORKDIR /app
 COPY . .
 
 # Install main API dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN make install-platform-dependencies
 
-# Download plugins and install their dependencies
-RUN python scripts/download_plugins.py && python scripts/install_plugin_dependencies.py
+# install plugin dependencies
+RUN make install-plugin-dependencies
 
 # Set the entry point to start plugins and the main API
-CMD ["bash", "-c", "python scripts/start_plugins.py && uvicorn api.main:app --host 0.0.0.0 --port 8000"]
+CMD ["start.sh"]

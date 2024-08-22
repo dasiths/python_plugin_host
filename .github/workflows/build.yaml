@@ -18,14 +18,11 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
-
-    - name: Run download and build plugins
-      run: python download_plugins.py && python start_plugins.py
+    - name: Download plugins
+      run: make install-platform-dependencies && make download-plugins
 
     - name: Build Docker image
-      run: docker build -t my-api .
+      run: make docker-build
 
     - name: Push Docker image
-      run: docker push my-api
+      run: make docker-push
