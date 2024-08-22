@@ -1,9 +1,1 @@
 plugins:
-  - name: SamplePluginV1
-    artifact_uri: https://artifactory.example.com/artifacts/sample-plugin-v1.tar.gz
-    version: 1.0.0
-    port: 8001
-  - name: SamplePluginV2
-    artifact_uri: https://artifactory.example.com/artifacts/sample-plugin-v2.tar.gz
-    version: 2.0.0
-    port: 8002

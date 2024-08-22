@@ -19,7 +19,7 @@ jobs:
         python-version: '3.12'
 
     - name: Build Docker image
-      run: make docker-build
+      run: make docker-build-base
 
     - name: Push Docker image
-      run: make docker-push
+      run: make docker-push-base
