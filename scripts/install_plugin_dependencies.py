@@ -6,6 +6,10 @@ import yaml
 with open('config.yaml', 'r') as file:
     PLUGINS = yaml.safe_load(file)['plugins']
 
+if PLUGINS is None or len(PLUGINS) == 0:
+    print("No plugins found in config.yaml")
+    PLUGINS = []
+
 plugins_dir = 'plugins'
 
 for plugin in PLUGINS:

@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from plugin_manager import PluginManager
 from config import PLUGINS
+import sys
 
 app = FastAPI()
 plugin_manager = PluginManager(PLUGINS)
@@ -31,6 +32,13 @@ async def get_plugins():
     
 
 if __name__ == "__main__":
-    import uvicorn
-    print("Starting API server...")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    try:
+        import uvicorn
+        print("Starting API server...")
+        uvicorn.run(app, host="0.0.0.0", port=8000)
+    except Exception as e:
+        print(f"An error occurred in API: {e}")
+        sys.exit(1)
+    finally:
+        print("Exiting API.")
+        sys.exit(0)

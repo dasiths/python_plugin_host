@@ -15,4 +15,6 @@ docker-push-base:
 	docker push ghcr.io/dasiths/plugin-platform-base:latest
 
 start:
-	python scripts/start_all.py
+	exec python scripts/start_all.py
+
+start-full: install-platform-dependencies download-plugins install-plugin-dependencies start

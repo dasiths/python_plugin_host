@@ -4,9 +4,14 @@ import sys
 import signal
 import yaml
 import time
+import asyncio
 
 with open('config.yaml', 'r') as file:
     PLUGINS = yaml.safe_load(file)['plugins']
+
+if PLUGINS is None or len(PLUGINS) == 0:
+    print("No plugins found in config.yaml")
+    PLUGINS = []
 
 api_path = 'api'
 plugins_dir = 'plugins'
@@ -15,7 +20,7 @@ processes = []
 
 def start_api():
     process = subprocess.Popen(
-        ['python', os.path.join(api_path, 'main.py')]
+        ['python', os.path.join(api_path, 'app.py')]
     )
     return process
 
@@ -59,9 +64,8 @@ def terminate_processes(processes):
 def handle_sigint(signal_received, frame):
     print("Terminating processes...")
     terminate_processes(processes)
-    sys.exit(0)
 
-if __name__ == '__main__':
+async def main():
     processes = []
     try:
         signal.signal(signal.SIGINT, handle_sigint)
@@ -77,20 +81,45 @@ if __name__ == '__main__':
             print(f"Started {plugin['name']} on port {plugin['port']}")
 
         # wait for all processes to finish
-        while True:
+        print(f"Running processes... {len(processes)}")
+
+        while True:            
             for process in processes:
                 if process.poll() is not None:
                     print(f"Process {process.pid} finished.")
                     processes.remove(process)
 
                     if process == api_process:
-                        print("API process has finished.")
+                        print("API process has finished. Closing other processes.")
                         terminate_processes(processes)
                         break
             if not processes:
                 break
-            time.sleep(1)
+            try:
+                await asyncio.sleep(1)  # 1000ms delay
+            except asyncio.CancelledError:
+                print("Cancelled.")
+                break
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        print("Trying to terminate processes during error...")
+        terminate_processes(processes)
+        raise e
     finally:
+        print("Trying to terminate processes during shutdown...")
         terminate_processes(processes)
         print("All processes terminated.")
+        sys.exit(0)
+
+if __name__ == '__main__':
+    try:       
+        asyncio.run(main())
+    except asyncio.CancelledError:
+        print("Cancelled task.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        sys.exit(1)
+    finally:
+        print("Exiting.")
         sys.exit(0)
